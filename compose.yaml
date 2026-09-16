@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17.4-alpine
+    environment:
+      POSTGRES_DB: utility_assets
+      POSTGRES_USER: utility_assets
+      # Review-only DB on a private Compose network; no DB port is published.
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/data/pgdata
+    tmpfs:
+      - /var/lib/postgresql/data:rw,nosuid,size=256m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U utility_assets -d utility_assets"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://utility_assets@db:5432/utility_assets
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      TOKEN_LIFETIME_MINUTES: ${TOKEN_LIFETIME_MINUTES:-60}
+      REQUESTS_PER_MINUTE: ${REQUESTS_PER_MINUTE:-60}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8000}:8000"

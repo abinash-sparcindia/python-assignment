@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Review-only local state and generated reports
+*.db
+*.sqlite3
+output/
