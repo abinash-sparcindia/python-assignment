@@ -84,11 +84,16 @@ def _coordinate(value: object, axis: str, issues: list[FieldIssue]) -> float | N
     if isinstance(value, str):
         text = value.strip()
         suffix = text[-1:].upper()
-        if suffix in "NSEW" and suffix:
+        number_text = text[:-1].strip()
+        try:
+            float(number_text)
+            has_numeric_compass_prefix = bool(number_text)
+        except ValueError:
+            has_numeric_compass_prefix = False
+        if suffix in "NSEW" and has_numeric_compass_prefix:
             if suffix not in allowed_suffixes:
                 issues.append(FieldIssue(field, f"compass letter must be {allowed_suffixes[0]} or {allowed_suffixes[1]}"))
                 return None
-            number_text = text[:-1].strip()
             if number_text.startswith(("+", "-")):
                 issues.append(FieldIssue(field, "do not combine a sign with a compass letter"))
                 return None
@@ -162,7 +167,10 @@ def _score(value: object, issues: list[FieldIssue]) -> int | None:
     elif isinstance(value, int):
         score = value
     elif isinstance(value, str) and INTEGER_PATTERN.fullmatch(value.strip()):
-        score = int(value.strip())
+        try:
+            score = int(value.strip())
+        except ValueError:
+            score = None
     else:
         score = None
     if score is None:
@@ -174,13 +182,17 @@ def _score(value: object, issues: list[FieldIssue]) -> int | None:
     return score
 
 
+def _reject_non_json_constant(_value: str) -> None:
+    raise ValueError("non-JSON numeric constant")
+
+
 def _attributes(value: object, issues: list[FieldIssue]) -> Any:
     if value is MISSING:
         issues.append(FieldIssue("attribute_json", "is required"))
         return MISSING
     if isinstance(value, str):
         try:
-            return json.loads(value)
+            return json.loads(value, parse_constant=_reject_non_json_constant)
         except (json.JSONDecodeError, ValueError):
             issues.append(FieldIssue("attribute_json", "must be valid JSON"))
             return MISSING
@@ -220,7 +232,7 @@ def validate_record(
     asset_type = raw.get("asset_type")
     if isinstance(asset_type, str):
         asset_type = asset_type.strip().casefold()
-    if asset_type not in ASSET_TYPES:
+    if not isinstance(asset_type, str) or asset_type not in ASSET_TYPES:
         issues.append(FieldIssue("asset_type", "must be pole, valve, manhole or transformer"))
 
     latitude = _coordinate(raw.get("latitude"), "latitude", issues)
@@ -235,7 +247,7 @@ def validate_record(
     status = raw.get("status")
     if isinstance(status, str):
         status = status.strip().casefold()
-    if status not in STATUSES:
+    if not isinstance(status, str) or status not in STATUSES:
         issues.append(FieldIssue("status", "must be active, decommissioned or proposed"))
 
     condition_score = _score(raw.get("condition_score"), issues)

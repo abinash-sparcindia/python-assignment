@@ -38,8 +38,8 @@ docker compose run --rm app alembic upgrade head
 docker compose run --rm app python -m pytest -q
 ```
 
-The test uses a temporary SQLite database and should report `1 passed`. It
-does not change the PostgreSQL review database. To verify the review database
+The tests use a temporary SQLite database and should all pass. They do not
+change the PostgreSQL review database. To verify the review database
 has the schema, run:
 
 ```powershell
