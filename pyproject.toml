@@ -15,6 +15,9 @@ dependencies = [
     "uvicorn==0.34.2",
 ]
 
+[project.scripts]
+utility-assets-import = "utility_assets.cli:main"
+
 [project.optional-dependencies]
 test = [
     "httpx==0.28.1",

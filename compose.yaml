@@ -22,8 +22,12 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       TOKEN_LIFETIME_MINUTES: ${TOKEN_LIFETIME_MINUTES:-60}
       REQUESTS_PER_MINUTE: ${REQUESTS_PER_MINUTE:-60}
+      SURVEY_CSV: /app/data/survey_export.csv
+      OUTPUT_DIR: /app/output
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./output:/app/output

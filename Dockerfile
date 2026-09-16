@@ -18,4 +18,4 @@ COPY data ./data
 COPY tests ./tests
 
 EXPOSE 8000
-CMD ["uvicorn", "utility_assets.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "utility_assets.startup"]

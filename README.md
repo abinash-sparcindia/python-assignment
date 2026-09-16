@@ -1,11 +1,10 @@
 # Utility asset survey assignment
 
 This repository is being built in three reviewable milestones; see [PLAN.md](PLAN.md).
-For commands to run the current scaffold, see [RUNBOOK.md](RUNBOOK.md).
-The current scaffold includes a synthetic 62-row survey export, a Python package,
-the initial PostgreSQL schema, shared cleaning/validation rules, and an API
-health endpoint. Ingestion, authentication and reports are planned in later
-commits.
+For commands to run it, see [RUNBOOK.md](RUNBOOK.md). Day 1 now includes the
+synthetic 62-row survey export, a one-command ingestion CLI, automatic review
+database seeding, geographic/report outputs and an API health endpoint.
+Authentication and asset API routes are planned for Day 2.
 
 ## Review database design
 
@@ -15,14 +14,14 @@ including `docker compose down`, erases its contents. The API container uses the
 database over the private Compose network; PostgreSQL has no published port.
 The database currently uses trust authentication **only for this isolated review
 stack** so a fresh checkout can start without a manually created secret. The
-finished application will generate its API signing secret and reviewer account at
-startup; neither will be committed. Do not use this Compose configuration as a
-production deployment.
+Day 2 authentication work will generate the API signing secret and reviewer
+account at startup; neither will be committed. Do not use this Compose
+configuration as a production deployment.
 
-The API currently starts without applying migrations or importing the CSV. That
-automatic startup step is scheduled for Day 1, Commit 3. The `db` service and
-image build still need a Docker smoke test; Docker is not installed on the
-current development host.
+The app now applies migrations and imports the synthetic CSV on a fresh
+database, then starts the API. It skips the seed on an app-only restart. The
+`db` service and image build still need a Docker smoke test; Docker is not
+installed on the current development host.
 
 ## Current local checks
 
