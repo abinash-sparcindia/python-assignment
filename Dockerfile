@@ -15,6 +15,7 @@ RUN python -m pip install --no-cache-dir --no-deps .
 COPY alembic.ini ./
 COPY migrations ./migrations
 COPY data ./data
+COPY tests ./tests
 
 EXPOSE 8000
 CMD ["uvicorn", "utility_assets.main:app", "--host", "0.0.0.0", "--port", "8000"]

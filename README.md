@@ -1,6 +1,7 @@
 # Utility asset survey assignment
 
 This repository is being built in three reviewable milestones; see [PLAN.md](PLAN.md).
+For commands to run the current scaffold, see [RUNBOOK.md](RUNBOOK.md).
 The current scaffold includes a synthetic 62-row survey export, a Python package,
 the initial PostgreSQL schema and an API health endpoint. Ingestion, authentication
 and reports are planned in later commits.

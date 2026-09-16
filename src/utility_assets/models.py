@@ -29,7 +29,7 @@ class Asset(Base):
     surveyor: Mapped[str] = mapped_column(String(120), nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     condition_score: Mapped[int] = mapped_column(Integer, nullable=False)
-    attributes: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    attributes: Mapped[Any] = mapped_column(JSON, nullable=False)
     visits: Mapped[list["Visit"]] = relationship(
         back_populates="asset", cascade="all, delete-orphan", passive_deletes=True
     )
