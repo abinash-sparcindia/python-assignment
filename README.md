@@ -4,8 +4,17 @@ This repository is being built in three reviewable milestones; see [PLAN.md](PLA
 For commands to run it, see [RUNBOOK.md](RUNBOOK.md). Day 1 now includes the
 synthetic 62-row survey export, a one-command ingestion CLI, automatic review
 database seeding, geographic/report outputs and an API health endpoint. Day 2
-has added sign-in, user roles and administrator-controlled account creation.
-Asset API routes are planned for the next commit.
+has added sign-in, user roles, administrator-controlled account creation, and
+the six authenticated asset operations. `GET /assets` returns a stable page
+(`limit` defaults to 25 and is capped at 100); `GET /assets/{asset_id}` reads
+one asset; `POST /assets` creates one; `PUT /assets/{asset_id}` replaces a full
+record; `PATCH /assets/{asset_id}` corrects selected fields; and
+`DELETE /assets/{asset_id}` removes an asset and its visits. Surveyors can read
+and write assets; deletion requires an administrator. Each successful create,
+replace, or patch adds a visit, with optional `notes`. Full writes use the same
+field names and validation rules as the CSV (`attribute_json` accepts a JSON
+value or JSON-encoded string). The search filters, visit-history endpoint, and
+bulk upload follow in the next commit.
 
 ## Review database design
 

@@ -1,11 +1,10 @@
-# Runbook: Day 1 review build
+# Runbook: review build
 
 The app runs with PostgreSQL in Docker Compose. A new review database is
 automatically migrated and seeded from the [synthetic 62-row CSV](data/README.md)
 when the stack starts. It should contain 51 assets and 51 visits; 11 bad rows
 are retained in a rejects file. The API provides `/health`, `/auth/login`,
-`/auth/me`, administrator-only `/users`, and `/docs`. Asset network routes are
-the next development step.
+`/auth/me`, administrator-only `/users`, the six asset routes, and `/docs`.
 
 ## Prerequisite
 
@@ -62,12 +61,24 @@ $reviewPassword = (($credentials | Where-Object { $_ -like 'password=*' }) -spli
 $body = @{ username = $reviewUser; password = $reviewPassword } | ConvertTo-Json
 $login = Invoke-RestMethod -Method Post -Uri http://localhost:8000/auth/login -ContentType 'application/json' -Body $body
 Invoke-RestMethod http://localhost:8000/auth/me -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod http://localhost:8000/assets -Headers @{ Authorization = "Bearer $($login.access_token)" }
 ```
 
 The final command should return `review-admin` with the `administrator` role.
 An administrator may create surveyor or administrator accounts with `POST
 /users`; the interactive form is at <http://localhost:8000/docs>. Restarting
 `app` generates new review credentials, so retrieve the file again afterward.
+
+The asset list is ordered by `asset_id` and returns `items`, `total`, `limit`
+and `offset`. Use `?limit=25&offset=25` for the next page. Signed-in surveyors
+can list, read, create, fully replace, and partially update assets; only an
+administrator can delete. A successful write adds a visit. A full create or
+replacement must supply every CSV field, including `elevation_m` (which may
+be `null`). A patch supplies only fields to change. To try a read in PowerShell:
+
+```powershell
+Invoke-RestMethod http://localhost:8000/assets/AA-0001 -Headers @{ Authorization = "Bearer $($login.access_token)" }
+```
 
 ## Run the ingestion CLI
 

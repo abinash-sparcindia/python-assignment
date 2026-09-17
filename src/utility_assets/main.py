@@ -8,7 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from utility_assets.auth import router as auth_router
+from utility_assets.assets_api import router as assets_router
 from utility_assets.errors import ApiError, api_error_handler
+from utility_assets.validation import RecordValidationError
 
 
 def create_app() -> FastAPI:
@@ -23,6 +25,10 @@ def create_app() -> FastAPI:
     )
     app.add_exception_handler(ApiError, api_error_handler)
 
+    @app.exception_handler(RecordValidationError)
+    def record_validation_handler(_request: Request, exc: RecordValidationError) -> JSONResponse:
+        return JSONResponse(status_code=422, content=exc.as_dict())
+
     @app.exception_handler(RequestValidationError)
     def request_validation_handler(_request: Request, exc: RequestValidationError) -> JSONResponse:
         errors = []
@@ -36,6 +42,7 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     app.include_router(auth_router)
+    app.include_router(assets_router)
     return app
 
 
