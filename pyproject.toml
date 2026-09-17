@@ -9,8 +9,10 @@ description = "Survey ingestion and asset API for an electricity utility"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "alembic==1.16.5",
+    "argon2-cffi==25.1.0",
     "fastapi==0.115.12",
     "psycopg[binary]==3.2.6",
+    "PyJWT==2.10.1",
     "SQLAlchemy==2.0.40",
     "uvicorn==0.34.2",
 ]

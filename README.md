@@ -3,8 +3,9 @@
 This repository is being built in three reviewable milestones; see [PLAN.md](PLAN.md).
 For commands to run it, see [RUNBOOK.md](RUNBOOK.md). Day 1 now includes the
 synthetic 62-row survey export, a one-command ingestion CLI, automatic review
-database seeding, geographic/report outputs and an API health endpoint.
-Authentication and asset API routes are planned for Day 2.
+database seeding, geographic/report outputs and an API health endpoint. Day 2
+has added sign-in, user roles and administrator-controlled account creation.
+Asset API routes are planned for the next commit.
 
 ## Review database design
 
@@ -14,8 +15,10 @@ including `docker compose down`, erases its contents. The API container uses the
 database over the private Compose network; PostgreSQL has no published port.
 The database currently uses trust authentication **only for this isolated review
 stack** so a fresh checkout can start without a manually created secret. The
-Day 2 authentication work will generate the API signing secret and reviewer
-account at startup; neither will be committed. Do not use this Compose
+review app generates its API signing secret and a fresh administrator password
+at startup; neither is committed or printed in logs. The password is kept only
+in a container-local file described in the runbook. A restart of `app` changes
+that password and invalidates existing tokens. Do not use this Compose
 configuration as a production deployment.
 
 The app now applies migrations and imports the synthetic CSV on a fresh
@@ -35,7 +38,7 @@ python -m venv .venv
 ```
 
 On Windows, replace `.venv/bin/python` with `.venv/Scripts/python.exe`.
-The database test uses a temporary SQLite file and never touches the review DB.
+The tests use temporary SQLite files and never touch the review DB.
 PostgreSQL integration checks will be added as the application is completed.
 
 The CSV is [synthetic](data/README.md); it is not the missing utility export.

@@ -10,6 +10,7 @@ class Settings:
     cors_origins: tuple[str, ...]
     token_lifetime_minutes: int
     requests_per_minute: int
+    signing_secret: str | None
 
 
 def get_settings() -> Settings:
@@ -25,4 +26,5 @@ def get_settings() -> Settings:
         ),
         token_lifetime_minutes=int(os.environ.get("TOKEN_LIFETIME_MINUTES", "60")),
         requests_per_minute=int(os.environ.get("REQUESTS_PER_MINUTE", "60")),
+        signing_secret=os.environ.get("SIGNING_SECRET"),
     )

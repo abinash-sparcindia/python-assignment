@@ -10,6 +10,7 @@ from utility_assets.cli import main as cli_main
 from utility_assets.db import get_engine
 from utility_assets.models import Asset, Visit
 from utility_assets.startup import initialize_review_database
+from utility_assets import startup
 
 
 SAMPLE = Path(__file__).resolve().parents[1] / "data" / "survey_export.csv"
@@ -72,6 +73,29 @@ def test_cli_help_and_run_summary(tmp_path, monkeypatch, capsys):
         assert "Rows rejected: 11" in text
         assert "Nearest asset: PL-0001 (0.000 km)" in text
         assert "Surveyors on 2026-09-02:" in text
+    finally:
+        get_engine().dispose()
+        get_engine.cache_clear()
+
+
+def test_review_entrypoint_migrates_seeds_identity_then_starts_api(tmp_path, monkeypatch):
+    database = tmp_path / "entrypoint.sqlite3"
+    credentials = tmp_path / "review-admin.txt"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite+pysqlite:///{database.as_posix()}")
+    monkeypatch.setenv("SURVEY_CSV", str(SAMPLE))
+    monkeypatch.setenv("OUTPUT_DIR", str(tmp_path / "output"))
+    monkeypatch.setenv("REVIEW_CREDENTIALS_FILE", str(credentials))
+    monkeypatch.setenv("REVIEW_MODE", "true")
+    monkeypatch.delenv("SIGNING_SECRET", raising=False)
+    started = []
+    monkeypatch.setattr(startup.uvicorn, "run", lambda *args, **kwargs: started.append((args, kwargs)))
+    get_engine.cache_clear()
+    try:
+        startup.main()
+        assert credentials.exists()
+        assert started == [(("utility_assets.main:app",), {"host": "0.0.0.0", "port": 8000})]
+        with Session(get_engine()) as session:
+            assert session.scalar(select(func.count()).select_from(Asset)) == 51
     finally:
         get_engine().dispose()
         get_engine.cache_clear()

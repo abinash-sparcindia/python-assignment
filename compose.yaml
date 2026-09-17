@@ -22,6 +22,8 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       TOKEN_LIFETIME_MINUTES: ${TOKEN_LIFETIME_MINUTES:-60}
       REQUESTS_PER_MINUTE: ${REQUESTS_PER_MINUTE:-60}
+      REVIEW_MODE: "true"
+      REVIEW_CREDENTIALS_FILE: /run/utility-assets/review-admin.txt
       SURVEY_CSV: /app/data/survey_export.csv
       OUTPUT_DIR: /app/output
     depends_on:

@@ -17,7 +17,7 @@ def db_session(tmp_path):
     configure_sqlite_transactions(engine)
 
     Base.metadata.create_all(engine)
-    with Session(engine) as session:
+    with Session(engine, expire_on_commit=False) as session:
         yield session
         session.rollback()
     engine.dispose()

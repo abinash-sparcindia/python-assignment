@@ -3,8 +3,9 @@
 The app runs with PostgreSQL in Docker Compose. A new review database is
 automatically migrated and seeded from the [synthetic 62-row CSV](data/README.md)
 when the stack starts. It should contain 51 assets and 51 visits; 11 bad rows
-are retained in a rejects file. The API currently provides `/health` and
-`/docs`. Authentication and asset network routes are Day 2 work.
+are retained in a rejects file. The API provides `/health`, `/auth/login`,
+`/auth/me`, administrator-only `/users`, and `/docs`. Asset network routes are
+the next development step.
 
 ## Prerequisite
 
@@ -42,6 +43,31 @@ The database counts should both be 51. The files `output/rejects.csv`,
 `output/map.geojson`, `output/summary.txt` and `output/ingestion.log` are
 written in the project directory. The tests use throwaway SQLite databases;
 they do not change the review database.
+
+## Sign in as the review administrator
+
+Retrieve the randomly generated credentials from the app container. The file
+is not mounted on the host and is not included in logs:
+
+```powershell
+docker compose exec app cat /run/utility-assets/review-admin.txt
+```
+
+Use the returned username and password to sign in:
+
+```powershell
+$credentials = docker compose exec -T app cat /run/utility-assets/review-admin.txt
+$reviewUser = (($credentials | Where-Object { $_ -like 'username=*' }) -split '=', 2)[1]
+$reviewPassword = (($credentials | Where-Object { $_ -like 'password=*' }) -split '=', 2)[1]
+$body = @{ username = $reviewUser; password = $reviewPassword } | ConvertTo-Json
+$login = Invoke-RestMethod -Method Post -Uri http://localhost:8000/auth/login -ContentType 'application/json' -Body $body
+Invoke-RestMethod http://localhost:8000/auth/me -Headers @{ Authorization = "Bearer $($login.access_token)" }
+```
+
+The final command should return `review-admin` with the `administrator` role.
+An administrator may create surveyor or administrator accounts with `POST
+/users`; the interactive form is at <http://localhost:8000/docs>. Restarting
+`app` generates new review credentials, so retrieve the file again afterward.
 
 ## Run the ingestion CLI
 
