@@ -13,8 +13,12 @@ record; `PATCH /assets/{asset_id}` corrects selected fields; and
 and write assets; deletion requires an administrator. Each successful create,
 replace, or patch adds a visit, with optional `notes`. Full writes use the same
 field names and validation rules as the CSV (`attribute_json` accepts a JSON
-value or JSON-encoded string). The search filters, visit-history endpoint, and
-bulk upload follow in the next commit.
+value or JSON-encoded string). The list accepts `asset_type`, `status`,
+`surveyor`, `min_score`, `max_score`, and case-insensitive `search` filters.
+`GET /assets/{asset_id}/visits` pages visit history, and `GET
+/reports/most-visited` ranks assets by visit count. Administrators can submit
+raw UTF-8 CSV as `text/csv` to `POST /imports/assets`, optionally with
+`?strict=true`; the response contains counts and original rejected rows.
 
 ## Review database design
 

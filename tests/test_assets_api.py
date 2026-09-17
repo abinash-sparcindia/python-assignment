@@ -1,5 +1,7 @@
 """Network asset lifecycle, field errors, visit retention and roles."""
 
+import csv
+import io
 import secrets
 
 import pytest
@@ -10,6 +12,7 @@ from sqlalchemy.orm import Session
 from utility_assets.auth import get_session, hash_password
 from utility_assets.main import create_app
 from utility_assets.models import Asset, User, Visit
+from utility_assets.validation import EXPECTED_COLUMNS
 
 
 @pytest.fixture
@@ -132,3 +135,91 @@ def test_patch_preserves_json_string_attribute(client, db_session):
     changed = client.patch("/assets/AA-0001", json={"condition_score": 6}, headers=headers)
     assert changed.status_code == 200
     assert changed.json()["attribute_json"] == "external reference"
+
+
+def test_filters_search_paging_and_history(client, db_session):
+    headers = credential(client, db_session, "surveyor")
+    records = [
+        {**sample("AA-0001"), "name": "North Pole", "asset_type": "pole", "surveyor": "Rita Sen", "condition_score": 3},
+        {**sample("AA-0002"), "name": "South Valve", "asset_type": "valve", "surveyor": "Arun Rai", "condition_score": 8},
+        {**sample("AA-0003"), "name": "North Valve", "asset_type": "valve", "surveyor": "Rita Sen", "condition_score": 6},
+    ]
+    for record in records:
+        assert client.post("/assets", json=record, headers=headers).status_code == 201
+    assert client.patch("/assets/AA-0001", json={"condition_score": 4, "notes": "follow-up"}, headers=headers).status_code == 200
+    found = client.get(
+        "/assets?asset_type=POLE&status=active&surveyor=rita%20sen&min_score=4&max_score=5&search=nOrTh",
+        headers=headers,
+    )
+    assert found.status_code == 200
+    assert found.json()["total"] == 1
+    assert found.json()["items"][0]["asset_id"] == "AA-0001"
+    assert client.get("/assets?search=%25", headers=headers).json()["total"] == 0
+    assert client.get("/assets?min_score=8&max_score=3", headers=headers).status_code == 422
+    assert client.get("/assets?asset_type=cable", headers=headers).status_code == 422
+    assert client.get("/assets?status=retired", headers=headers).status_code == 422
+    visits = client.get("/assets/AA-0001/visits?limit=1", headers=headers)
+    assert visits.status_code == 200
+    assert visits.json()["total"] == 2
+    assert visits.json()["items"][0]["notes"] == "follow-up"
+    assert client.get("/assets/AA-9999/visits", headers=headers).status_code == 404
+    ranking = client.get("/reports/most-visited?limit=2", headers=headers)
+    assert ranking.json() == [
+        {"asset_id": "AA-0001", "visit_count": 2},
+        {"asset_id": "AA-0002", "visit_count": 1},
+    ]
+
+
+def _csv_bytes(rows):
+    stream = io.StringIO(newline="")
+    writer = csv.DictWriter(stream, fieldnames=EXPECTED_COLUMNS)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({**row, "attribute_json": '{"material":"steel"}'})
+    return stream.getvalue().encode("utf-8")
+
+
+def test_admin_csv_upload_reuses_ingestion_and_reports_rejects(client, db_session):
+    surveyor = credential(client, db_session, "surveyor")
+    administrator = credential(client, db_session, "administrator")
+    payload = _csv_bytes([sample("AA-0001"), {**sample("AA-0002"), "latitude": "100N"}])
+    endpoint = "/imports/assets"
+    assert client.post(endpoint, content=payload, headers={"Content-Type": "text/csv"}).status_code == 401
+    assert client.post(endpoint, content=payload, headers={**surveyor, "Content-Type": "text/csv"}).status_code == 403
+    uploaded = client.post(endpoint, content=payload, headers={**administrator, "Content-Type": "text/csv"})
+    assert uploaded.status_code == 200
+    assert (uploaded.json()["rows_read"], uploaded.json()["accepted"], uploaded.json()["rejected"]) == (2, 1, 1)
+    assert uploaded.json()["rejected_rows"][0]["original"]["latitude"] == "100N"
+    with Session(db_session.bind) as session:
+        assert session.scalar(select(func.count()).select_from(Asset)) == 1
+        assert session.scalar(select(func.count()).select_from(Visit)) == 1
+    repeated = client.post(endpoint, content=_csv_bytes([{**sample("AA-0001"), "condition_score": 5}]), headers={**administrator, "Content-Type": "text/csv"})
+    assert repeated.json()["accepted"] == 1
+    with Session(db_session.bind) as session:
+        assert session.get(Asset, "AA-0001").condition_score == 5
+        assert session.scalar(select(func.count()).select_from(Visit)) == 2
+
+
+def test_strict_upload_rolls_back_and_bad_schema_returns_422(client, db_session):
+    administrator = credential(client, db_session, "administrator")
+    headers = {**administrator, "Content-Type": "text/csv"}
+    payload = _csv_bytes([sample("AA-0001"), {**sample("AA-0002"), "condition_score": 12}])
+    aborted = client.post("/imports/assets?strict=true", content=payload, headers=headers)
+    assert aborted.status_code == 200
+    assert (aborted.json()["aborted"], aborted.json()["accepted"], aborted.json()["rejected"]) == (True, 0, 1)
+    assert client.post("/imports/assets", content=b"asset_id,name\nAA-0001,Missing\n", headers=headers).status_code == 422
+    assert client.post("/imports/assets", content=b"", headers=headers).status_code == 422
+    with Session(db_session.bind) as session:
+        assert session.scalar(select(func.count()).select_from(Asset)) == 0
+
+
+def test_openapi_documents_discovery_inputs_and_responses(client):
+    schema = client.get("/openapi.json").json()
+    routes = schema["paths"]
+    filters = {parameter["name"] for parameter in routes["/assets"]["get"]["parameters"]}
+    assert {"asset_type", "status", "surveyor", "min_score", "max_score", "search", "limit", "offset"} <= filters
+    assert "200" in routes["/assets/{asset_id}/visits"]["get"]["responses"]
+    assert "200" in routes["/reports/most-visited"]["get"]["responses"]
+    upload = routes["/imports/assets"]["post"]
+    assert "text/csv" in upload["requestBody"]["content"]
+    assert "200" in upload["responses"]

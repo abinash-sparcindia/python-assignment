@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from utility_assets.auth import router as auth_router
 from utility_assets.assets_api import router as assets_router
+from utility_assets.discovery_api import router as discovery_router
 from utility_assets.errors import ApiError, api_error_handler
 from utility_assets.validation import RecordValidationError
 
@@ -43,6 +44,7 @@ def create_app() -> FastAPI:
 
     app.include_router(auth_router)
     app.include_router(assets_router)
+    app.include_router(discovery_router)
     return app
 
 

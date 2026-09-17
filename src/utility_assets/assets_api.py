@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from utility_assets.auth import get_current_user, get_session, require_administrator
 from utility_assets.errors import ApiError
 from utility_assets.models import Asset, User, Visit
-from utility_assets.validation import CleanAssetRecord, EXPECTED_COLUMNS, validate_record
+from utility_assets.validation import ASSET_TYPES, STATUSES, CleanAssetRecord, EXPECTED_COLUMNS, validate_record
 
 
 router = APIRouter(prefix="/assets", tags=["assets"])
@@ -36,6 +36,22 @@ class AssetView(BaseModel):
 
 class AssetPage(BaseModel):
     items: list[AssetView]
+    total: int
+    limit: int
+    offset: int
+
+
+class VisitView(BaseModel):
+    id: int
+    asset_id: str
+    surveyed_on: str
+    surveyor: str
+    condition_score: int
+    notes: str | None
+
+
+class VisitPage(BaseModel):
+    items: list[VisitView]
     total: int
     limit: int
     offset: int
@@ -128,10 +144,71 @@ def list_assets(
     session: Annotated[Session, Depends(get_session)],
     limit: Annotated[int, Query(ge=1, le=100)] = 25,
     offset: Annotated[int, Query(ge=0)] = 0,
+    asset_type: str | None = None,
+    status: str | None = None,
+    surveyor: str | None = None,
+    min_score: Annotated[int | None, Query(ge=0, le=10)] = None,
+    max_score: Annotated[int | None, Query(ge=0, le=10)] = None,
+    search: Annotated[str | None, Query(max_length=120)] = None,
 ) -> AssetPage:
-    total = session.scalar(select(func.count()).select_from(Asset)) or 0
-    assets = session.scalars(select(Asset).order_by(Asset.asset_id).limit(limit).offset(offset)).all()
+    conditions = []
+    if asset_type is not None:
+        asset_type = asset_type.strip().casefold()
+        if asset_type not in ASSET_TYPES:
+            raise ApiError(422, "asset_type", "must be pole, valve, manhole or transformer")
+        conditions.append(Asset.asset_type == asset_type)
+    if status is not None:
+        status = status.strip().casefold()
+        if status not in STATUSES:
+            raise ApiError(422, "status", "must be active, decommissioned or proposed")
+        conditions.append(Asset.status == status)
+    if surveyor is not None:
+        surveyor = " ".join(surveyor.split())
+        if not surveyor:
+            raise ApiError(422, "surveyor", "must not be empty")
+        conditions.append(func.lower(Asset.surveyor) == surveyor.casefold())
+    if min_score is not None:
+        conditions.append(Asset.condition_score >= min_score)
+    if max_score is not None:
+        conditions.append(Asset.condition_score <= max_score)
+    if min_score is not None and max_score is not None and min_score > max_score:
+        raise ApiError(422, "min_score", "must not exceed max_score")
+    if search is not None:
+        search = search.strip()
+        if not search:
+            raise ApiError(422, "search", "must not be empty")
+        literal = search.casefold().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        conditions.append(func.lower(Asset.name).like(f"%{literal}%", escape="\\"))
+    total = session.scalar(select(func.count()).select_from(Asset).where(*conditions)) or 0
+    assets = session.scalars(select(Asset).where(*conditions).order_by(Asset.asset_id).limit(limit).offset(offset)).all()
     return AssetPage(items=[_view(asset) for asset in assets], total=total, limit=limit, offset=offset)
+
+
+@router.get("/{asset_id}/visits", response_model=VisitPage)
+def list_visits(
+    asset_id: str,
+    _user: Annotated[User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 25,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> VisitPage:
+    _find(session, asset_id)
+    predicate = Visit.asset_id == asset_id
+    total = session.scalar(select(func.count()).select_from(Visit).where(predicate)) or 0
+    visits = session.scalars(
+        select(Visit).where(predicate).order_by(Visit.surveyed_on.desc(), Visit.id.desc()).limit(limit).offset(offset)
+    ).all()
+    return VisitPage(
+        items=[VisitView(
+            id=visit.id,
+            asset_id=visit.asset_id,
+            surveyed_on=visit.surveyed_on.isoformat(),
+            surveyor=visit.surveyor,
+            condition_score=visit.condition_score,
+            notes=visit.notes,
+        ) for visit in visits],
+        total=total, limit=limit, offset=offset,
+    )
 
 
 @router.get("/{asset_id}", response_model=AssetView)

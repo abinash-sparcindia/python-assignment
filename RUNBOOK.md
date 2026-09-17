@@ -70,7 +70,10 @@ An administrator may create surveyor or administrator accounts with `POST
 `app` generates new review credentials, so retrieve the file again afterward.
 
 The asset list is ordered by `asset_id` and returns `items`, `total`, `limit`
-and `offset`. Use `?limit=25&offset=25` for the next page. Signed-in surveyors
+and `offset`. Use `?limit=25&offset=25` for the next page. Filter with
+`asset_type`, `status`, `surveyor`, `min_score`, `max_score`, or `search` (name
+substring, case-insensitive). The filters combine, and `total` counts matching
+assets. Signed-in surveyors
 can list, read, create, fully replace, and partially update assets; only an
 administrator can delete. A successful write adds a visit. A full create or
 replacement must supply every CSV field, including `elevation_m` (which may
@@ -78,7 +81,29 @@ be `null`). A patch supplies only fields to change. To try a read in PowerShell:
 
 ```powershell
 Invoke-RestMethod http://localhost:8000/assets/AA-0001 -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod 'http://localhost:8000/assets?asset_type=pole&min_score=0&max_score=4&limit=25' -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod http://localhost:8000/assets/PL-0001/visits -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod http://localhost:8000/reports/most-visited -Headers @{ Authorization = "Bearer $($login.access_token)" }
 ```
+
+Visit history returns `items`, `total`, `limit`, and `offset`, newest survey
+first. Most-visited returns up to 10 assets by default, ordered by visit count
+then asset ID. Both require sign-in.
+
+An administrator can upload a later CSV directly. The upload uses the same
+validation and import rules as the CLI. Accepted rows refresh current asset
+details and append visits; rejected originals and reasons are returned in the
+JSON response. `?strict=true` rolls back all accepted rows if any row fails.
+The upload has a 5 MiB limit and keeps working files only temporarily.
+
+```powershell
+$csvBytes = [System.IO.File]::ReadAllBytes((Resolve-Path 'data/survey_export.csv'))
+Invoke-RestMethod -Method Post -Uri 'http://localhost:8000/imports/assets?strict=true' -Headers @{ Authorization = "Bearer $($login.access_token)" } -ContentType 'text/csv' -Body $csvBytes
+```
+
+The bundled synthetic CSV has rejected rows, so this strict example reports
+`aborted=true` and leaves the database unchanged. For a normal later import,
+omit `?strict=true` and supply a daily CSV.
 
 ## Run the ingestion CLI
 
