@@ -1,0 +1,1229 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7813,
+          20.2411
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0001",
+        "name": "Bhubaneswar Pole 1",
+        "asset_type": "pole",
+        "elevation_m": 36.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 1,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "height_m": 9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7826,
+          20.2422
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0002",
+        "name": "Bhubaneswar Valve 2",
+        "asset_type": "valve",
+        "elevation_m": 37.0,
+        "surveyed_on": "2026-09-03",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7839,
+          20.2433
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0003",
+        "name": "Bhubaneswar Manhole 3",
+        "asset_type": "manhole",
+        "elevation_m": 38.0,
+        "surveyed_on": "2026-09-04",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 3,
+        "condition_band": "POOR",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7852,
+          20.2444
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0004",
+        "name": "Bhubaneswar Transformer 4",
+        "asset_type": "transformer",
+        "elevation_m": 39.0,
+        "surveyed_on": "2026-09-05",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 4,
+        "condition_band": "POOR",
+        "attributes": {
+          "rating_kva": 200
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7865,
+          20.2455
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0005",
+        "name": "Bhubaneswar Pole 5",
+        "asset_type": "pole",
+        "elevation_m": 40.0,
+        "surveyed_on": "2026-09-06",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 5,
+        "condition_band": "FAIR",
+        "attributes": {
+          "height_m": 8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7878,
+          -20.2466
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0006",
+        "name": "Bhubaneswar Valve 6",
+        "asset_type": "valve",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-07",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 6,
+        "condition_band": "FAIR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.7891,
+          20.2477
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0007",
+        "name": "Bhubaneswar Manhole 7",
+        "asset_type": "manhole",
+        "elevation_m": 42.0,
+        "surveyed_on": "2026-09-08",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 7,
+        "condition_band": "FAIR",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7904,
+          20.2488
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0008",
+        "name": "Bhubaneswar Transformer 8",
+        "asset_type": "transformer",
+        "elevation_m": 43.0,
+        "surveyed_on": "2026-09-09",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 8,
+        "condition_band": "GOOD",
+        "attributes": {
+          "rating_kva": 150
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7917,
+          20.2499
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0009",
+        "name": "Bhubaneswar Pole 9",
+        "asset_type": "pole",
+        "elevation_m": 44.0,
+        "surveyed_on": "2026-09-10",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 9,
+        "condition_band": "GOOD",
+        "attributes": {
+          "height_m": 12
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.793,
+          20.251
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0010",
+        "name": "Bhubaneswar Valve 10",
+        "asset_type": "valve",
+        "elevation_m": 45.0,
+        "surveyed_on": "2026-09-01",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 10,
+        "condition_band": "GOOD",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7943,
+          20.2521
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0011",
+        "name": "Bhubaneswar Manhole 11",
+        "asset_type": "manhole",
+        "elevation_m": 46.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 0,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7956,
+          20.2532
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0012",
+        "name": "Bhubaneswar Transformer 12",
+        "asset_type": "transformer",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-03",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 1,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "rating_kva": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7969,
+          20.2543
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0013",
+        "name": "Bhubaneswar Pole 13",
+        "asset_type": "pole",
+        "elevation_m": 36.0,
+        "surveyed_on": "2026-09-04",
+        "surveyor": "Anita Das",
+        "status": "proposed",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "height_m": 11
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7982,
+          20.2554
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0014",
+        "name": "Bhubaneswar Valve 14",
+        "asset_type": "valve",
+        "elevation_m": 37.0,
+        "surveyed_on": "2026-09-05",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 3,
+        "condition_band": "POOR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7995,
+          20.2565
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0015",
+        "name": "Bhubaneswar Manhole 15",
+        "asset_type": "manhole",
+        "elevation_m": 38.0,
+        "surveyed_on": "2026-09-06",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 4,
+        "condition_band": "POOR",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8008,
+          20.2576
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0016",
+        "name": "Bhubaneswar Transformer 16",
+        "asset_type": "transformer",
+        "elevation_m": 39.0,
+        "surveyed_on": "2026-09-07",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 5,
+        "condition_band": "FAIR",
+        "attributes": {
+          "rating_kva": 200
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8021,
+          20.2587
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0017",
+        "name": "Bhubaneswar Pole 17",
+        "asset_type": "pole",
+        "elevation_m": 40.0,
+        "surveyed_on": "2026-09-08",
+        "surveyor": "Anita Das",
+        "status": "decommissioned",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "height_m": 10
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8034,
+          20.2598
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0018",
+        "name": "Bhubaneswar Valve 18",
+        "asset_type": "valve",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-09",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 7,
+        "condition_band": "FAIR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8047,
+          20.2609
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0019",
+        "name": "Bhubaneswar Manhole 19",
+        "asset_type": "manhole",
+        "elevation_m": 42.0,
+        "surveyed_on": "2026-09-10",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 8,
+        "condition_band": "GOOD",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.806,
+          20.262
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0020",
+        "name": "Bhubaneswar Transformer 20",
+        "asset_type": "transformer",
+        "elevation_m": 43.0,
+        "surveyed_on": "2026-09-01",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 9,
+        "condition_band": "GOOD",
+        "attributes": {
+          "rating_kva": 150
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8073,
+          20.2631
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0021",
+        "name": "Bhubaneswar Pole 21",
+        "asset_type": "pole",
+        "elevation_m": 44.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 10,
+        "condition_band": "GOOD",
+        "attributes": {
+          "height_m": 9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8086,
+          20.2642
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0022",
+        "name": "Bhubaneswar Valve 22",
+        "asset_type": "valve",
+        "elevation_m": 45.0,
+        "surveyed_on": "2026-09-03",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 0,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8099,
+          20.2653
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0023",
+        "name": "Bhubaneswar Manhole 23",
+        "asset_type": "manhole",
+        "elevation_m": 46.0,
+        "surveyed_on": "2026-09-04",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 1,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8112,
+          20.2664
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0024",
+        "name": "Bhubaneswar Transformer 24",
+        "asset_type": "transformer",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-05",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "rating_kva": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8125,
+          20.2675
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0025",
+        "name": "Bhubaneswar Pole 25",
+        "asset_type": "pole",
+        "elevation_m": 36.0,
+        "surveyed_on": "2026-09-06",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 3,
+        "condition_band": "POOR",
+        "attributes": {
+          "height_m": 8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8138,
+          20.2686
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0026",
+        "name": "Bhubaneswar Valve 26",
+        "asset_type": "valve",
+        "elevation_m": 37.0,
+        "surveyed_on": "2026-09-07",
+        "surveyor": "Rahul Sen",
+        "status": "proposed",
+        "condition_score": 4,
+        "condition_band": "POOR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8151,
+          20.2697
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0027",
+        "name": "Bhubaneswar Manhole 27",
+        "asset_type": "manhole",
+        "elevation_m": 38.0,
+        "surveyed_on": "2026-09-08",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 5,
+        "condition_band": "FAIR",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8164,
+          20.2708
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0028",
+        "name": "Bhubaneswar Transformer 28",
+        "asset_type": "transformer",
+        "elevation_m": 39.0,
+        "surveyed_on": "2026-09-09",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 6,
+        "condition_band": "FAIR",
+        "attributes": {
+          "rating_kva": 200
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8177,
+          20.2719
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0029",
+        "name": "Bhubaneswar Pole 29",
+        "asset_type": "pole",
+        "elevation_m": 40.0,
+        "surveyed_on": "2026-09-10",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 7,
+        "condition_band": "FAIR",
+        "attributes": {
+          "height_m": 12
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.819,
+          20.273
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0030",
+        "name": "Bhubaneswar Valve 30",
+        "asset_type": "valve",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-01",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 8,
+        "condition_band": "GOOD",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8203,
+          20.2741
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0031",
+        "name": "Bhubaneswar Manhole 31",
+        "asset_type": "manhole",
+        "elevation_m": 42.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 9,
+        "condition_band": "GOOD",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8216,
+          20.2752
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0032",
+        "name": "Bhubaneswar Transformer 32",
+        "asset_type": "transformer",
+        "elevation_m": 43.0,
+        "surveyed_on": "2026-09-03",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 10,
+        "condition_band": "GOOD",
+        "attributes": {
+          "rating_kva": 150
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8229,
+          20.2763
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0033",
+        "name": "Bhubaneswar Pole 33",
+        "asset_type": "pole",
+        "elevation_m": 44.0,
+        "surveyed_on": "2026-09-04",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 0,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "height_m": 11
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8242,
+          20.2774
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0034",
+        "name": "Bhubaneswar Valve 34",
+        "asset_type": "valve",
+        "elevation_m": 45.0,
+        "surveyed_on": "2026-09-05",
+        "surveyor": "Rahul Sen",
+        "status": "decommissioned",
+        "condition_score": 1,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8255,
+          20.2785
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0035",
+        "name": "Bhubaneswar Manhole 35",
+        "asset_type": "manhole",
+        "elevation_m": 46.0,
+        "surveyed_on": "2026-09-06",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8268,
+          20.2796
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0036",
+        "name": "Bhubaneswar Transformer 36",
+        "asset_type": "transformer",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-07",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 3,
+        "condition_band": "POOR",
+        "attributes": {
+          "rating_kva": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8281,
+          20.2807
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0037",
+        "name": "Bhubaneswar Pole 37",
+        "asset_type": "pole",
+        "elevation_m": 36.0,
+        "surveyed_on": "2026-09-08",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 4,
+        "condition_band": "POOR",
+        "attributes": {
+          "height_m": 10
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8294,
+          20.2818
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0038",
+        "name": "Bhubaneswar Valve 38",
+        "asset_type": "valve",
+        "elevation_m": 37.0,
+        "surveyed_on": "2026-09-09",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 5,
+        "condition_band": "FAIR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8307,
+          20.2829
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0039",
+        "name": "Bhubaneswar Manhole 39",
+        "asset_type": "manhole",
+        "elevation_m": 38.0,
+        "surveyed_on": "2026-09-10",
+        "surveyor": "Priya Nair",
+        "status": "proposed",
+        "condition_score": 6,
+        "condition_band": "FAIR",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.832,
+          20.284
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0040",
+        "name": "Bhubaneswar Transformer 40",
+        "asset_type": "transformer",
+        "elevation_m": 39.0,
+        "surveyed_on": "2026-09-01",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 7,
+        "condition_band": "FAIR",
+        "attributes": {
+          "rating_kva": 200
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8333,
+          20.2851
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0041",
+        "name": "Bhubaneswar Pole 41",
+        "asset_type": "pole",
+        "elevation_m": 40.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 8,
+        "condition_band": "GOOD",
+        "attributes": {
+          "height_m": 9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8346,
+          20.2862
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0042",
+        "name": "Bhubaneswar Valve 42",
+        "asset_type": "valve",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-03",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 9,
+        "condition_band": "GOOD",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8359,
+          20.2873
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0043",
+        "name": "Bhubaneswar Manhole 43",
+        "asset_type": "manhole",
+        "elevation_m": 42.0,
+        "surveyed_on": "2026-09-04",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 10,
+        "condition_band": "GOOD",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8372,
+          20.2884
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0044",
+        "name": "Bhubaneswar Transformer 44",
+        "asset_type": "transformer",
+        "elevation_m": 43.0,
+        "surveyed_on": "2026-09-05",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 0,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "rating_kva": 150
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8385,
+          20.2895
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0045",
+        "name": "Bhubaneswar Pole 45",
+        "asset_type": "pole",
+        "elevation_m": 44.0,
+        "surveyed_on": "2026-09-06",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 1,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "height_m": 8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8398,
+          20.2906
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0046",
+        "name": "Bhubaneswar Valve 46",
+        "asset_type": "valve",
+        "elevation_m": 45.0,
+        "surveyed_on": "2026-09-07",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 2,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8411,
+          20.2917
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0047",
+        "name": "Bhubaneswar Manhole 47",
+        "asset_type": "manhole",
+        "elevation_m": 46.0,
+        "surveyed_on": "2026-09-08",
+        "surveyor": "Priya Nair",
+        "status": "active",
+        "condition_score": 3,
+        "condition_band": "POOR",
+        "attributes": {
+          "depth_m": 1.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8424,
+          20.2928
+        ]
+      },
+      "properties": {
+        "asset_id": "TR-0048",
+        "name": "Bhubaneswar Transformer 48",
+        "asset_type": "transformer",
+        "elevation_m": null,
+        "surveyed_on": "2026-09-09",
+        "surveyor": "Mohan Rao",
+        "status": "active",
+        "condition_score": 4,
+        "condition_band": "POOR",
+        "attributes": {
+          "rating_kva": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8437,
+          20.2939
+        ]
+      },
+      "properties": {
+        "asset_id": "PL-0049",
+        "name": "Bhubaneswar Pole 49",
+        "asset_type": "pole",
+        "elevation_m": 36.0,
+        "surveyed_on": "2026-09-10",
+        "surveyor": "Anita Das",
+        "status": "active",
+        "condition_score": 5,
+        "condition_band": "FAIR",
+        "attributes": {
+          "height_m": 12
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.845,
+          20.295
+        ]
+      },
+      "properties": {
+        "asset_id": "VA-0050",
+        "name": "Bhubaneswar Valve 50",
+        "asset_type": "valve",
+        "elevation_m": 37.0,
+        "surveyed_on": "2026-09-01",
+        "surveyor": "Rahul Sen",
+        "status": "active",
+        "condition_score": 6,
+        "condition_band": "FAIR",
+        "attributes": {
+          "bore_mm": 100
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.8463,
+          20.2961
+        ]
+      },
+      "properties": {
+        "asset_id": "MH-0051",
+        "name": "Bhubaneswar Manhole 51",
+        "asset_type": "manhole",
+        "elevation_m": 38.0,
+        "surveyed_on": "2026-09-02",
+        "surveyor": "Priya Nair",
+        "status": "decommissioned",
+        "condition_score": 0,
+        "condition_band": "CRITICAL",
+        "attributes": {
+          "depth_m": 1.5
+        }
+      }
+    }
+  ]
+}

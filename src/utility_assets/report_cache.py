@@ -51,6 +51,12 @@ class SummaryCache:
         self._expires_at = 0.0
         self._value: dict[str, Any] | None = None
 
+    def clear(self) -> None:
+        with self._lock:
+            self._key = None
+            self._expires_at = 0.0
+            self._value = None
+
     def get(self, session: Session) -> dict[str, Any]:
         revision = session.scalar(select(ReportRevision.version).where(ReportRevision.id == 1)) or 0
         key = (str(session.get_bind().url), revision)

@@ -1,6 +1,6 @@
 # Utility asset survey assignment
 
-This repository is being built in three reviewable milestones; see [PLAN.md](PLAN.md).
+This repository implements the three milestones in [PLAN.md](PLAN.md).
 For commands to run it, see [RUNBOOK.md](RUNBOOK.md). Day 1 now includes the
 synthetic 62-row survey export, a one-command ingestion CLI, automatic review
 database seeding, geographic/report outputs and an API health endpoint. Day 2
@@ -51,10 +51,14 @@ in a container-local file described in the runbook. A restart of `app` changes
 that password and invalidates existing tokens. Do not use this Compose
 configuration as a production deployment.
 
-The app now applies migrations and imports the synthetic CSV on a fresh
-database, then starts the API. It skips the seed on an app-only restart. The
-`db` service and image build still need a Docker smoke test; Docker is not
-installed on the current development host.
+The app applies migrations and imports the synthetic CSV on a fresh database,
+then starts the API. It skips the seed on an app-only restart. A separate
+`db-test` Compose service uses another tmpfs PostgreSQL database named
+`utility_assets_test`; `docker compose --profile test run --rm test` runs the
+suite against it. The test fixture refuses a `TEST_DATABASE_URL` whose database
+name does not end in `_test`, to protect the review database. Docker is not
+installed on the development host, so this Compose workflow still needs a
+live smoke test.
 
 ## Current local checks
 
@@ -68,7 +72,13 @@ python -m venv .venv
 ```
 
 On Windows, replace `.venv/bin/python` with `.venv/Scripts/python.exe`.
-The tests use temporary SQLite files and never touch the review DB.
-PostgreSQL integration checks will be added as the application is completed.
+The default tests use temporary SQLite files. For the isolated PostgreSQL test
+run, use the Compose command above. Neither test path touches the review DB.
+
+The checked-in [synthetic deliverables](deliverables/README.md) include one
+rejects CSV, GeoJSON map and text report. Run
+`python scripts/generate_deliverables.py` to regenerate them. See
+[FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for verified checks and the
+remaining Docker and recording steps.
 
 The CSV is [synthetic](data/README.md); it is not the missing utility export.

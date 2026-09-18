@@ -33,3 +33,30 @@ services:
       - "${APP_PORT:-8000}:8000"
     volumes:
       - ./output:/app/output
+
+  db-test:
+    profiles: ["test"]
+    image: postgres:17.4-alpine
+    environment:
+      POSTGRES_DB: utility_assets_test
+      POSTGRES_USER: utility_assets_test
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/data/pgdata
+    tmpfs:
+      - /var/lib/postgresql/data:rw,nosuid,size=256m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U utility_assets_test -d utility_assets_test"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  test:
+    profiles: ["test"]
+    build: .
+    environment:
+      TEST_DATABASE_URL: postgresql+psycopg://utility_assets_test@db-test:5432/utility_assets_test
+      DATABASE_URL: postgresql+psycopg://utility_assets_test@db-test:5432/utility_assets_test
+    depends_on:
+      db-test:
+        condition: service_healthy
+    command: ["python", "-m", "pytest", "-q"]

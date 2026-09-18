@@ -1,0 +1,12 @@
+asset_id,name,asset_type,latitude,longitude,elevation_m,surveyed_on,surveyor,status,condition_score,attribute_json,reason
+PL-0052,  BHUBANESWAR   POLE  1  ,pole,91.2,85.7813,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}",latitude: must be between -90 and 90
+VA-0053,  BHUBANESWAR   POLE  1  ,pole,20.2411,east-ish,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}",longitude: must be a number
+PL-0001,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}",asset_id: is already in use
+,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}",asset_id: is required
+P-0056,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}",asset_id: must match AA-0000 using capital letters
+VA-0057,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,14,"{""height_m"":9}",condition_score: must be between 0 and 10
+MH-0058,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,,"{""height_m"":9}",condition_score: must be a whole number from 0 to 10
+TR-0059,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2099-01-01,Anita Das,active,1,"{""height_m"":9}",surveyed_on: must not be later than today
+PL-0060,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,active,1,{height_m: 9},attribute_json: must be valid JSON
+VA-0061,  BHUBANESWAR   POLE  1  ,cable,20.2411,85.7813,36,2026-09-02,Anita Das,active,1,"{""height_m"":9}","asset_type: must be pole, valve, manhole or transformer"
+MH-0062,  BHUBANESWAR   POLE  1  ,pole,20.2411,85.7813,36,2026-09-02,Anita Das,decommissioned,7,"{""height_m"":9}",condition_score: must not exceed 2 for a decommissioned asset

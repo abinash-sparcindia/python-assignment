@@ -1,0 +1,15 @@
+UTILITY ASSET SURVEY - INGESTION SUMMARY
+Run time: 2026-09-18T04:54:52+00:00
+
+Asset type     Count  Avg score  Worst asset
+--------------------------------------------------
+manhole           13       4.46  MH-0011 (0)
+pole              13       4.38  PL-0033 (0)
+transformer       12       4.92  TR-0044 (0)
+valve             13       4.85  VA-0022 (0)
+
+Rows read: 62
+Rows accepted: 51
+Rows rejected: 11
+Survey extent: lat -20.246600 to 20.296100; lon -85.789100 to 85.846300
+Need repair (active, score < 5): MH-0011, PL-0033, TR-0044, VA-0022, MH-0023, PL-0001, PL-0045, TR-0012, MH-0035, TR-0024, VA-0002, VA-0046, MH-0003, MH-0047, PL-0025, TR-0036, VA-0014, MH-0015, PL-0037, TR-0004, TR-0048

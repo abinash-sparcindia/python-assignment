@@ -35,13 +35,16 @@ commit `.env`.
 ```powershell
 docker compose exec db psql -U utility_assets -d utility_assets -c "SELECT COUNT(*) FROM assets;"
 docker compose exec db psql -U utility_assets -d utility_assets -c "SELECT COUNT(*) FROM visits;"
-docker compose run --rm app python -m pytest -q
+docker compose --profile test run --rm test
 ```
 
-The database counts should both be 51. The files `output/rejects.csv`,
+The database counts should both be 51. The test command uses a separate
+PostgreSQL `db-test` container with a temporary database; the test suite resets
+that database and never targets the review DB. The files `output/rejects.csv`,
 `output/map.geojson`, `output/summary.txt` and `output/ingestion.log` are
-written in the project directory. The tests use throwaway SQLite databases;
-they do not change the review database.
+written in the project directory. Checked-in examples are in
+[`deliverables/`](deliverables/README.md). The default local test suite uses
+throwaway SQLite files; the Compose test command exercises PostgreSQL.
 
 ## Sign in as the review administrator
 
@@ -149,7 +152,7 @@ checks required columns before touching the database and logs each run.
 ## Stop and reset
 
 ```powershell
-docker compose down
+docker compose --profile test down
 ```
 
 PostgreSQL stores its data on container `tmpfs`, without a host data mount or
