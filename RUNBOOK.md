@@ -10,8 +10,8 @@ are retained in a rejects file. The API provides `/health`, `/auth/login`,
 
 Install and start Docker Desktop in Linux-container mode. Open PowerShell in
 the repository root and confirm `docker compose version` works. Docker was not
-available on the development host when this runbook was written, so the
-container commands have not had a live smoke test yet.
+available in the current verification environment, so the container commands
+have not had a live smoke test yet.
 
 ## Start and check the review stack
 

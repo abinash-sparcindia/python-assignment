@@ -1,11 +1,10 @@
 # Utility asset survey assignment
 
-This repository implements the three milestones in [PLAN.md](PLAN.md).
-For commands to run it, see [RUNBOOK.md](RUNBOOK.md). Day 1 now includes the
-synthetic 62-row survey export, a one-command ingestion CLI, automatic review
-database seeding, geographic/report outputs and an API health endpoint. Day 2
-has added sign-in, user roles, administrator-controlled account creation, and
-the six authenticated asset operations. `GET /assets` returns a stable page
+This project provides a command-line CSV importer and an authenticated API for
+utility asset surveys. For setup and operating commands, see
+[RUNBOOK.md](RUNBOOK.md). The repository includes a synthetic 62-row survey
+export, automatic review database seeding, rejects and geographic/report
+outputs. `GET /assets` returns a stable page
 (`limit` defaults to 25 and is capped at 100); `GET /assets/{asset_id}` reads
 one asset; `POST /assets` creates one; `PUT /assets/{asset_id}` replaces a full
 record; `PATCH /assets/{asset_id}` corrects selected fields; and
@@ -15,11 +14,11 @@ replace, or patch adds a visit, with optional `notes`. Full writes use the same
 field names and validation rules as the CSV (`attribute_json` accepts a JSON
 value or JSON-encoded string). The list accepts `asset_type`, `status`,
 `surveyor`, `min_score`, `max_score`, and case-insensitive `search` filters.
-`GET /assets/{asset_id}/visits` pages visit history, and `GET
-/reports/most-visited` ranks assets by visit count. Administrators can submit
+`GET /assets/{asset_id}/visits` pages visit history, and
+`GET /reports/most-visited` ranks assets by visit count. Administrators can submit
 raw UTF-8 CSV as `text/csv` to `POST /imports/assets`, optionally with
 `?strict=true`; the response contains counts and original rejected rows.
-Day 3 now exposes live `GET /reports/summary`, `/reports/repairs`,
+The API also exposes live `GET /reports/summary`, `/reports/repairs`,
 `/reports/nearest?latitude=...&longitude=...`, and
 `/reports/surveyors-by-day?day=YYYY-MM-DD`. Summary results are cached for at
 most 60 seconds. A database revision advances with every committed asset write
@@ -57,8 +56,8 @@ then starts the API. It skips the seed on an app-only restart. A separate
 `utility_assets_test`; `docker compose --profile test run --rm test` runs the
 suite against it. The test fixture refuses a `TEST_DATABASE_URL` whose database
 name does not end in `_test`, to protect the review database. Docker is not
-installed on the development host, so this Compose workflow still needs a
-live smoke test.
+available in the current verification environment, so this Compose workflow
+still needs a live smoke test.
 
 ## Current local checks
 

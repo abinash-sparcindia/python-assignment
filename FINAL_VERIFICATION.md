@@ -1,10 +1,8 @@
-# Final verification and demo handoff
+# Verification checklist
 
 ## Completed on 18 September 2026
 
-- Three reviewable commits were made on each planned day (nine implementation
-  commits, plus the initial plan commit). The working tree was clean before
-  this final handoff commit.
+- Changes were committed in focused steps.
 - `python -m pytest -q` passed: **67 tests** using disposable SQLite databases.
   The tests cover migration, automatic seed, CLI, CSV rejects, asset operations,
   roles, reports, caching, request limits, and the checked-in deliverables.
@@ -22,7 +20,7 @@
 
 ## Pending on a Docker host
 
-Docker is not installed on the development host used for this commit. These
+Docker is not available in the current verification environment. These
 checks must be run before claiming a fully verified Docker delivery:
 
 1. From a fresh checkout, run `docker compose up --build -d`. Check
