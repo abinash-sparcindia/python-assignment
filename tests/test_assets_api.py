@@ -12,6 +12,8 @@ from sqlalchemy.orm import Session
 from utility_assets.auth import get_session, hash_password
 from utility_assets.main import create_app
 from utility_assets.models import Asset, User, Visit
+from utility_assets.ingestion import OutputPaths, ingest_csv
+from utility_assets import report_cache
 from utility_assets.validation import EXPECTED_COLUMNS
 
 
@@ -223,3 +225,81 @@ def test_openapi_documents_discovery_inputs_and_responses(client):
     upload = routes["/imports/assets"]["post"]
     assert "text/csv" in upload["requestBody"]["content"]
     assert "200" in upload["responses"]
+
+
+def test_live_reports_include_current_assets_and_historical_surveyors(client, db_session):
+    headers = credential(client, db_session, "surveyor")
+    first = {**sample("AA-0001"), "asset_type": "pole", "latitude": 0, "longitude": 0, "condition_score": 2}
+    second = {**sample("AA-0002"), "asset_type": "pole", "latitude": 0, "longitude": 1, "condition_score": 8}
+    third = {**sample("AA-0003"), "asset_type": "valve", "latitude": 1, "longitude": 1, "condition_score": 4, "status": "proposed"}
+    for row in (first, second, third):
+        assert client.post("/assets", json=row, headers=headers).status_code == 201
+    assert client.patch("/assets/AA-0001", json={"surveyor": "New Inspector", "surveyed_on": "2026-09-02"}, headers=headers).status_code == 200
+
+    summary = client.get("/reports/summary", headers=headers)
+    assert summary.status_code == 200
+    values = summary.json()
+    assert values["total_assets"] == 3
+    assert values["by_type"]["pole"]["average_condition"] == 5
+    assert values["by_type"]["pole"]["worst_asset_id"] == "AA-0001"
+    assert values["extent"] == {"min_latitude": 0, "min_longitude": 0, "max_latitude": 1, "max_longitude": 1}
+    assert values["repair_asset_ids"] == ["AA-0001"]
+    repairs = client.get("/reports/repairs", headers=headers).json()
+    assert [item["asset"]["asset_id"] for item in repairs] == ["AA-0001"]
+    assert repairs[0]["condition_band"] == "CRITICAL"
+    nearest = client.get("/reports/nearest?latitude=0&longitude=0.8", headers=headers)
+    assert nearest.status_code == 200
+    assert nearest.json()["asset"]["asset_id"] == "AA-0002"
+    assert nearest.json()["distance_km"] == pytest.approx(22.239, abs=0.002)
+    assert client.get("/reports/nearest?latitude=91&longitude=0", headers=headers).status_code == 422
+    assert client.get("/reports/surveyors-by-day?day=2026-09-01", headers=headers).json()["surveyors"] == ["Rita Sen"]
+    assert client.get("/reports/surveyors-by-day?day=2026-09-02", headers=headers).json()["surveyors"] == ["New Inspector"]
+    assert client.get("/reports/surveyors-by-day?day=invalid", headers=headers).status_code == 422
+    assert client.get("/reports/summary").status_code == 401
+
+
+def test_summary_cache_reuses_result_expires_and_invalidates_after_writes(client, db_session, monkeypatch):
+    surveyor = credential(client, db_session, "surveyor")
+    administrator = credential(client, db_session, "administrator")
+    calls = []
+    real_summary = report_cache.summary_statistics
+    monkeypatch.setattr(report_cache, "summary_statistics", lambda records: (calls.append(len(records)), real_summary(records))[1])
+    clock = [100.0]
+    monkeypatch.setattr(report_cache, "monotonic", lambda: clock[0])
+
+    assert client.get("/reports/summary", headers=surveyor).json()["total_assets"] == 0
+    assert client.get("/reports/summary", headers=surveyor).json()["total_assets"] == 0
+    assert calls == [0]
+    clock[0] += 59
+    client.get("/reports/summary", headers=surveyor)
+    assert calls == [0]
+    clock[0] += 1
+    client.get("/reports/summary", headers=surveyor)
+    assert calls == [0, 0]
+
+    assert client.post("/assets", json=sample(), headers=surveyor).status_code == 201
+    assert client.get("/reports/summary", headers=surveyor).json()["total_assets"] == 1
+    assert calls == [0, 0, 1]
+    assert client.patch("/assets/AA-0001", json={"condition_score": 3}, headers=surveyor).status_code == 200
+    assert client.get("/reports/summary", headers=surveyor).json()["repair_asset_ids"] == ["AA-0001"]
+    assert calls == [0, 0, 1, 1]
+    assert client.put("/assets/AA-0001", json={**sample(), "condition_score": 9}, headers=surveyor).status_code == 200
+    assert client.get("/reports/summary", headers=surveyor).json()["repair_asset_ids"] == []
+    assert len(calls) == 5
+    assert client.delete("/assets/AA-0001", headers=administrator).status_code == 204
+    assert client.get("/reports/summary", headers=surveyor).json()["total_assets"] == 0
+    assert len(calls) == 6
+
+
+def test_summary_refreshes_after_bulk_and_cli_imports(client, db_session, tmp_path):
+    administrator = credential(client, db_session, "administrator")
+    assert client.get("/reports/summary", headers=administrator).json()["total_assets"] == 0
+    body = _csv_bytes([sample("AA-0001")])
+    uploaded = client.post("/imports/assets", content=body, headers={**administrator, "Content-Type": "text/csv"})
+    assert uploaded.json()["accepted"] == 1
+    assert client.get("/reports/summary", headers=administrator).json()["total_assets"] == 1
+
+    source = tmp_path / "later.csv"
+    source.write_bytes(_csv_bytes([sample("AA-0002")]))
+    ingest_csv(source, paths=OutputPaths.in_directory(tmp_path / "outputs"), engine=db_session.bind)
+    assert client.get("/reports/summary", headers=administrator).json()["total_assets"] == 2

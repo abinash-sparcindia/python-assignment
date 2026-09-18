@@ -84,11 +84,24 @@ Invoke-RestMethod http://localhost:8000/assets/AA-0001 -Headers @{ Authorization
 Invoke-RestMethod 'http://localhost:8000/assets?asset_type=pole&min_score=0&max_score=4&limit=25' -Headers @{ Authorization = "Bearer $($login.access_token)" }
 Invoke-RestMethod http://localhost:8000/assets/PL-0001/visits -Headers @{ Authorization = "Bearer $($login.access_token)" }
 Invoke-RestMethod http://localhost:8000/reports/most-visited -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod http://localhost:8000/reports/summary -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod http://localhost:8000/reports/repairs -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod 'http://localhost:8000/reports/nearest?latitude=20.24&longitude=85.78' -Headers @{ Authorization = "Bearer $($login.access_token)" }
+Invoke-RestMethod 'http://localhost:8000/reports/surveyors-by-day?day=2026-09-01' -Headers @{ Authorization = "Bearer $($login.access_token)" }
 ```
 
 Visit history returns `items`, `total`, `limit`, and `offset`, newest survey
 first. Most-visited returns up to 10 assets by default, ordered by visit count
 then asset ID. Both require sign-in.
+
+The summary returns current asset counts, average scores and worst assets by
+type, the geographic extent, and IDs needing repair. The repair report lists
+active assets below score 5. Nearest uses geographic distance and returns one
+asset with distance in kilometres; it returns 404 when the database is empty.
+Surveyors-by-day reads visit history, including older surveys of an asset whose
+current surveyor has since changed. Summary is cached for no more than 60
+seconds; any committed asset change or accepted CSV import advances the
+database revision and refreshes it on the next request.
 
 An administrator can upload a later CSV directly. The upload uses the same
 validation and import rules as the CLI. Accepted rows refresh current asset

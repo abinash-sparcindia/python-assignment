@@ -59,6 +59,13 @@ class SeedRun(Base):
     )
 
 
+class ReportRevision(Base):
+    __tablename__ = "report_revision"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+
+
 class User(Base):
     __tablename__ = "users"
     __table_args__ = (

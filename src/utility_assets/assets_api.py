@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from utility_assets.auth import get_current_user, get_session, require_administrator
 from utility_assets.errors import ApiError
 from utility_assets.models import Asset, User, Visit
+from utility_assets.report_cache import bump_report_revision
 from utility_assets.validation import ASSET_TYPES, STATUSES, CleanAssetRecord, EXPECTED_COLUMNS, validate_record
 
 
@@ -234,6 +235,7 @@ def create_asset(
     _apply(asset, record)
     _visit(asset, record, notes)
     session.add(asset)
+    bump_report_revision(session)
     try:
         session.commit()
     except IntegrityError as exc:
@@ -256,6 +258,7 @@ def replace_asset(
     record = validate_record(payload)
     _apply(asset, record)
     _visit(asset, record, notes)
+    bump_report_revision(session)
     session.commit()
     return _view(asset)
 
@@ -276,6 +279,7 @@ def patch_asset(
     record = validate_record(merged)
     _apply(asset, record)
     _visit(asset, record, notes)
+    bump_report_revision(session)
     session.commit()
     return _view(asset)
 
@@ -288,5 +292,6 @@ def delete_asset(
 ) -> Response:
     asset = _find(session, asset_id)
     session.delete(asset)
+    bump_report_revision(session)
     session.commit()
     return Response(status_code=204)

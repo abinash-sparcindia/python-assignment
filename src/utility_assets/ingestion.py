@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from utility_assets.db import get_engine
 from utility_assets.models import Asset, SeedRun, Visit
+from utility_assets.report_cache import bump_report_revision
 from utility_assets.reports import render_summary, to_geojson
 from utility_assets.validation import EXPECTED_COLUMNS, CleanAssetRecord, RecordValidationError, validate_record
 
@@ -199,6 +200,8 @@ def ingest_csv(
                     accepted.append(clean)
                 if seed_key:
                     session.add(SeedRun(key=seed_key))
+                if accepted:
+                    bump_report_revision(session)
     except _StrictAbort:
         aborted = True
         accepted.clear()

@@ -19,6 +19,12 @@ value or JSON-encoded string). The list accepts `asset_type`, `status`,
 /reports/most-visited` ranks assets by visit count. Administrators can submit
 raw UTF-8 CSV as `text/csv` to `POST /imports/assets`, optionally with
 `?strict=true`; the response contains counts and original rejected rows.
+Day 3 now exposes live `GET /reports/summary`, `/reports/repairs`,
+`/reports/nearest?latitude=...&longitude=...`, and
+`/reports/surveyors-by-day?day=YYYY-MM-DD`. Summary results are cached for at
+most 60 seconds. A database revision advances with every committed asset write
+or accepted CSV import, so the next summary request refreshes immediately,
+including after an import from a separate CLI process.
 
 ## Review database design
 

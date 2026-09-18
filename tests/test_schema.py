@@ -1,10 +1,13 @@
 """Schema invariants independent of API and ingestion behavior."""
 
 from datetime import date
+from pathlib import Path
 
-from sqlalchemy import select
+from alembic import command
+from alembic.config import Config
+from sqlalchemy import create_engine, select
 
-from utility_assets.models import Asset, Visit
+from utility_assets.models import Asset, ReportRevision, Visit
 
 
 def test_asset_visit_cascade(db_session):
@@ -31,3 +34,16 @@ def test_asset_visit_cascade(db_session):
     db_session.commit()
 
     assert db_session.scalar(select(Visit.id)) is None
+
+
+def test_report_revision_migration_initializes_cache_version(tmp_path, monkeypatch):
+    database_url = f"sqlite+pysqlite:///{tmp_path / 'migrated.sqlite3'}"
+    monkeypatch.setenv("DATABASE_URL", database_url)
+    config = Config(str(Path(__file__).resolve().parents[1] / "alembic.ini"))
+    command.upgrade(config, "head")
+    engine = create_engine(database_url)
+    try:
+        with engine.connect() as connection:
+            assert connection.scalar(select(ReportRevision.version)) == 0
+    finally:
+        engine.dispose()
