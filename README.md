@@ -1,29 +1,81 @@
 # Utility asset survey assignment
 
-This project provides a command-line CSV importer and an authenticated API for
-utility asset surveys. For setup and operating commands, see
-[RUNBOOK.md](RUNBOOK.md). The repository includes a synthetic 62-row survey
-export, automatic review database seeding, rejects and geographic/report
-outputs. `GET /assets` returns a stable page
-(`limit` defaults to 25 and is capped at 100); `GET /assets/{asset_id}` reads
-one asset; `POST /assets` creates one; `PUT /assets/{asset_id}` replaces a full
-record; `PATCH /assets/{asset_id}` corrects selected fields; and
-`DELETE /assets/{asset_id}` removes an asset and its visits. Surveyors can read
-and write assets; deletion requires an administrator. Each successful create,
-replace, or patch adds a visit, with optional `notes`. Full writes use the same
-field names and validation rules as the CSV (`attribute_json` accepts a JSON
-value or JSON-encoded string). The list accepts `asset_type`, `status`,
-`surveyor`, `min_score`, `max_score`, and case-insensitive `search` filters.
-`GET /assets/{asset_id}/visits` pages visit history, and
-`GET /reports/most-visited` ranks assets by visit count. Administrators can submit
-raw UTF-8 CSV as `text/csv` to `POST /imports/assets`, optionally with
-`?strict=true`; the response contains counts and original rejected rows.
-The API also exposes live `GET /reports/summary`, `/reports/repairs`,
-`/reports/nearest?latitude=...&longitude=...`, and
-`/reports/surveyors-by-day?day=YYYY-MM-DD`. Summary results are cached for at
-most 60 seconds. A database revision advances with every committed asset write
-or accepted CSV import, so the next summary request refreshes immediately,
-including after an import from a separate CLI process.
+This project provides a one-command CSV importer and an authenticated API for
+utility asset surveys. The repository includes a **synthetic** 62-row survey
+export because the utility's original file was not available. A fresh review
+database is migrated and seeded automatically with 51 accepted assets and 11
+rejected rows. The importer also produces GeoJSON, a text summary and a dated
+run log. Detailed operating instructions are in [RUNBOOK.md](RUNBOOK.md).
+
+## Start the review stack
+
+Install and start Docker Desktop with Compose, then run from the repository root:
+
+```sh
+docker compose up --build -d
+docker compose ps
+```
+
+Open <http://localhost:8000/docs> for interactive API documentation. The
+unprotected `GET /health` route should return `{"status":"ok"}`. The review
+administrator's random credentials are stored only in the app container:
+
+```sh
+docker compose exec app cat /run/utility-assets/review-admin.txt
+```
+
+Sign in through `POST /auth/login` and present the returned bearer token on
+later requests. `GET /auth/me` shows the signed-in account. Only an
+administrator can create another account with `POST /users`. No surveyor
+account is pre-created; the administrator chooses its password at creation.
+Passwords are not returned by the API. Use `docker compose down` to stop and
+clear the review database. The generated files under `output/` remain on the
+host for inspection.
+
+## Network operations
+
+- `GET /assets` lists a stable page (default 25, maximum 100) and accepts
+  `limit`, `offset`, `asset_type`, `status`, `surveyor`, `min_score`, `max_score`
+  and case-insensitive name `search`. The response includes the total count.
+- `GET /assets/{asset_id}` fetches one asset. `POST /assets` creates one,
+  `PUT /assets/{asset_id}` replaces all fields, `PATCH /assets/{asset_id}`
+  corrects selected fields, and `DELETE /assets/{asset_id}` removes it and its
+  visits. Full writes use the 11 CSV field names and the shared validator;
+  `attribute_json` accepts a JSON value or JSON-encoded string. Every
+  successful create, replace or patch adds a visit, with optional `notes`.
+- `GET /assets/{asset_id}/visits` pages an asset's visit history.
+- `GET /reports/summary` provides counts, average scores, worst assets, extent
+  and repair IDs. `GET /reports/repairs` lists active assets below score 5;
+  `GET /reports/most-visited` ranks visit counts. `GET /reports/nearest` takes
+  `latitude` and `longitude`; `GET /reports/surveyors-by-day` takes `day`.
+- `POST /imports/assets` accepts a raw UTF-8 CSV body with the `text/csv`
+  content type. It reports accepted and rejected counts and the original rejected
+  rows. `?strict=true` rolls back the import if any row is rejected.
+
+All asset and report routes require sign-in. Surveyors may read, create and
+correct assets. Administrators can additionally delete assets, upload CSVs and
+create users. The summary is cached for at most 60 seconds and refreshed on
+the next request after any committed asset change or accepted CSV import,
+including an import from a separate CLI process.
+
+## Command-line ingestion
+
+The `utility-assets-import` command takes a CSV path and supports `--help`,
+`--rejects`, `--map`, `--summary`, `--log` and `--strict`. It checks required
+columns before writing, keeps original values and reasons for rejected rows,
+and prints counts and output locations. In the review container:
+
+```sh
+docker compose run --rm app utility-assets-import --help
+docker compose run --rm app utility-assets-import data/survey_export.csv --strict --rejects output/strict-rejects.csv
+```
+
+Supply a new daily CSV for a normal import. Re-importing the bundled sample
+adds another visit to each accepted existing asset. The strict example above
+finds an intentionally bad row, exits with code 2 and leaves the seeded
+database unchanged. Use [RUNBOOK.md](RUNBOOK.md) for output-path options.
+
+## Configuration and request limits
 
 The API applies an in-process sliding request limit per client IP (default 60
 requests in 60 seconds), returns `429` with `Retry-After` when exceeded, and
@@ -59,7 +111,7 @@ name does not end in `_test`, to protect the review database. Docker is not
 available in the current verification environment, so this Compose workflow
 still needs a live smoke test.
 
-## Current local checks
+## Tests and deliverables
 
 With Python 3.12 available, install from the lock file and the package:
 
