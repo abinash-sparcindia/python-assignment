@@ -11,13 +11,16 @@ from utility_assets.auth import router as auth_router
 from utility_assets.assets_api import router as assets_router
 from utility_assets.discovery_api import router as discovery_router
 from utility_assets.report_api import router as report_router
+from utility_assets.config import parse_cors_origins, request_limit
 from utility_assets.errors import ApiError, api_error_handler
+from utility_assets.operations import OperationalMiddleware
 from utility_assets.validation import RecordValidationError
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Utility Asset Service", version="0.1.0")
-    origins = [origin.strip() for origin in os.environ.get("CORS_ORIGINS", "").split(",") if origin.strip()]
+    origins = parse_cors_origins(os.environ.get("CORS_ORIGINS", ""))
+    app.add_middleware(OperationalMiddleware, limit=request_limit())
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,

@@ -69,6 +69,16 @@ An administrator may create surveyor or administrator accounts with `POST
 /users`; the interactive form is at <http://localhost:8000/docs>. Restarting
 `app` generates new review credentials, so retrieve the file again afterward.
 
+Each HTTP response includes `X-Response-Time-Ms`. App logs record the method,
+path, response status, duration and caller IP without request bodies or query
+strings (`docker compose logs app`). The default limit is 60 requests per IP
+within a rolling minute; a rejected request returns HTTP 429 and `Retry-After`
+in seconds. `/health` stays available during a limit. Set
+`REQUESTS_PER_MINUTE` in a local `.env` before startup to adjust the review
+limit. `CORS_ORIGINS` accepts comma-separated exact origins such as
+`http://localhost:3000`; wildcard entries are rejected. Local repeatable
+timings are in [PERFORMANCE.md](PERFORMANCE.md).
+
 The asset list is ordered by `asset_id` and returns `items`, `total`, `limit`
 and `offset`. Use `?limit=25&offset=25` for the next page. Filter with
 `asset_type`, `status`, `surveyor`, `min_score`, `max_score`, or `search` (name

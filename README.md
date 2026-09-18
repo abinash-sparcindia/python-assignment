@@ -26,6 +26,17 @@ most 60 seconds. A database revision advances with every committed asset write
 or accepted CSV import, so the next summary request refreshes immediately,
 including after an import from a separate CLI process.
 
+The API applies an in-process sliding request limit per client IP (default 60
+requests in 60 seconds), returns `429` with `Retry-After` when exceeded, and
+exempts `/health`. Response headers include `X-Response-Time-Ms`; logs record
+method, path, status, duration, and client IP without query strings or bodies.
+The review stack runs one API process, so the in-memory limiter covers that
+process. A multi-process deployment needs a shared external limiter.
+`CORS_ORIGINS` accepts comma-separated exact HTTP(S) origins; wildcards are
+rejected. `DATABASE_URL`, `SIGNING_SECRET`, `TOKEN_LIFETIME_MINUTES`,
+`CORS_ORIGINS`, and `REQUESTS_PER_MINUTE` configure a non-review deployment.
+See [PERFORMANCE.md](PERFORMANCE.md) for repeatable local timing checks.
+
 ## Review database design
 
 `compose.yaml` defines a PostgreSQL container whose data directory is `tmpfs`.

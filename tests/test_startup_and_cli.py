@@ -93,7 +93,7 @@ def test_review_entrypoint_migrates_seeds_identity_then_starts_api(tmp_path, mon
     try:
         startup.main()
         assert credentials.exists()
-        assert started == [(("utility_assets.main:app",), {"host": "0.0.0.0", "port": 8000})]
+        assert started == [(("utility_assets.main:app",), {"host": "0.0.0.0", "port": 8000, "access_log": False})]
         with Session(get_engine()) as session:
             assert session.scalar(select(func.count()).select_from(Asset)) == 51
     finally:

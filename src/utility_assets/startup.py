@@ -78,7 +78,7 @@ def main() -> None:
         if len(os.environ.get("SIGNING_SECRET", "")) < 32:
             raise RuntimeError("SIGNING_SECRET must be supplied outside review mode")
         command.upgrade(Config(str(Path.cwd() / "alembic.ini")), "head")
-    uvicorn.run("utility_assets.main:app", host="0.0.0.0", port=8000)
+    uvicorn.run("utility_assets.main:app", host="0.0.0.0", port=8000, access_log=False)
 
 
 if __name__ == "__main__":
