@@ -215,3 +215,5 @@ __marimo__/
 *.db
 *.sqlite3
 output/
+*.log
+!deliverables/ingestion.log

@@ -33,5 +33,9 @@ def test_checked_in_outputs_match_synthetic_input(tmp_path):
         assert _without_run_time(paths.summary.read_text(encoding="utf-8")) == _without_run_time(
             (delivered / "summary.txt").read_text(encoding="utf-8")
         )
+        log_line = (delivered / "ingestion.log").read_text(encoding="utf-8").strip()
+        assert log_line.count("\n") == 0
+        assert "status=completed" in log_line
+        assert "read=62" in log_line and "accepted=51" in log_line and "rejected=11" in log_line
     finally:
         engine.dispose()

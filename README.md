@@ -58,12 +58,21 @@ create users. The summary is cached for at most 60 seconds and refreshed on
 the next request after any committed asset change or accepted CSV import,
 including an import from a separate CLI process.
 
-## Command-line ingestion
+## Command-line file load
 
-The `utility-assets-import` command takes a CSV path and supports `--help`,
-`--rejects`, `--map`, `--summary`, `--log` and `--strict`. It checks required
-columns before writing, keeps original values and reasons for rejected rows,
-and prints counts and output locations. In the review container:
+A night-shift operator loads a day's CSV with one command. From the project
+folder on Windows:
+
+```powershell
+.\upload data\survey_export.csv
+```
+
+No database setup is required. The first run creates `output\survey.sqlite3`.
+Every run writes `output\rejects.csv`, `output\map.geojson`,
+`output\summary.txt`, and appends `output\ingestion.log`. It prints how many
+rows were read, accepted, and rejected. Run `.\upload --help` to see optional
+`--rejects`, `--map`, `--summary`, `--log`, and `--strict` paths. The same
+program is `utility-assets-import` inside the review container:
 
 ```sh
 docker compose run --rm app utility-assets-import --help
@@ -126,10 +135,11 @@ On Windows, replace `.venv/bin/python` with `.venv/Scripts/python.exe`.
 The default tests use temporary SQLite files. For the isolated PostgreSQL test
 run, use the Compose command above. Neither test path touches the review DB.
 
-The checked-in [synthetic deliverables](deliverables/README.md) include one
-rejects CSV, GeoJSON map and text report. Run
-`python scripts/generate_deliverables.py` to regenerate them. See
-[FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for verified checks and the
-remaining Docker and recording steps.
+The checked-in [ingestion outputs](deliverables/README.md) are one run of
+`utility-assets-import` on `data/survey_export.csv`: `rejects.csv`,
+`map.geojson`, `summary.txt`, and `ingestion.log`. Run
+`python scripts/generate_deliverables.py` to produce them again with that
+command. See [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for verified checks
+and the remaining Docker and recording steps.
 
 The CSV is [synthetic](data/README.md); it is not the missing utility export.

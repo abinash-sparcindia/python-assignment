@@ -38,6 +38,28 @@ def test_startup_migrates_seeds_and_skips_repeated_seed(tmp_path, monkeypatch):
         get_engine.cache_clear()
 
 
+def test_cli_creates_local_database_from_csv_path_alone(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(Path(__file__).resolve().parents[1])
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    database = tmp_path / "survey.sqlite3"
+    monkeypatch.setattr("utility_assets.cli.LOCAL_DATABASE", database)
+    get_engine.cache_clear()
+    try:
+        exit_code = cli_main([str(SAMPLE)])
+        text = capsys.readouterr().out
+        assert exit_code == 0
+        assert "Rows read: 62" in text
+        assert "Rows accepted: 51" in text
+        assert "Rows rejected: 11" in text
+        assert database.exists()
+        assert Path("output/rejects.csv").exists()
+        assert Path("output/map.geojson").exists()
+        assert Path("output/summary.txt").exists()
+    finally:
+        get_engine().dispose()
+        get_engine.cache_clear()
+
+
 def test_cli_help_and_run_summary(tmp_path, monkeypatch, capsys):
     with pytest.raises(SystemExit) as help_exit:
         cli_main(["--help"])
